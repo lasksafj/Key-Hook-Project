@@ -8,7 +8,7 @@ from Building import Building
 
 class Room(Base):
     __tablename__ = "rooms"
-    building_name = Column("building_name", ForeignKey('buildings.id'), String(10), nullable=False, primary_key=True)
+    building_name = Column("building_name", String(10), ForeignKey('buildings.name'), nullable=False, primary_key=True)
     number = Column("number", Integer, nullable=False, primary_key=True)
 
     request_list: [Request] = relationship("Request", back_populates="room", viewonly=False)
