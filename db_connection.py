@@ -24,7 +24,7 @@ db_url = "postgresql+psycopg2://postgres:123qwe@localhost:5432/postgres"
 
 # Create the database engine that we will use for all of our work.  This does not actually connect
 # just yet, it is more like a connection prototype that we actually fire up when we create a session.
-engine = create_engine(db_url, pool_size=5, pool_recycle=3600, echo=True)
+engine = create_engine(db_url, pool_size=5, pool_recycle=3600)
 
 # Create a session factory using the engine that we just defined.
 session_factory = sessionmaker(bind=engine)

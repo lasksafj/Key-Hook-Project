@@ -24,3 +24,4 @@ class Employee(Base):
         request = Request(employee=self, room=room, request_time=request_time)
         room.request_list.append(request)
         self.request_list.append(request)
+        return request

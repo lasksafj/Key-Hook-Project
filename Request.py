@@ -1,5 +1,7 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, UniqueConstraint, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
+
+from Loan import Loan
 from orm_base import Base
 from Room import Room
 
@@ -28,3 +30,12 @@ class Request(Base):
         self.request_time = request_time
         self.employee = employee
         self.room = room
+
+    def grant_key(self, key):
+        if self.loan:
+            return
+        loan = Loan(key=key, request=self)
+        key.loan_list.append(loan)
+        self.loan.append(loan)
+
+
