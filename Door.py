@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from orm_base import Base
-from Room import Room
 from HookDoor import HookDoor
 
 
@@ -15,7 +14,7 @@ class Door(Base):
     room = relationship("Room", back_populates="door_list")
     hook_door_list: [HookDoor] = relationship('HookDoor', back_populates='door', viewonly=False)
 
-    def __int__(self, room: Room, name: String):
+    def __int__(self, room, name: String):
         self.room_building_name = room.building_name
         self.room_number = room.number
         self.name = name
