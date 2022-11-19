@@ -24,6 +24,7 @@ if __name__ == '__main__':
     logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
 
     with Session() as sess:
+        sess.begin()
         while 1:
             print('Menu: choose one')
             print('a. Create a new Key.\n'
@@ -42,16 +43,22 @@ if __name__ == '__main__':
                 hook_number = input('Which hook do you want to create key: ')
                 hooks = sess.query(Hook).all()
                 print(hooks)
-                found_hook = 0
+                found_hook = {}
                 for hook in hooks:
                     if hook_number == hook.number:
-                        found_hook = 1
+                        found_hook = hook
                         break
                 if not found_hook:
                     print('Cannot find hook')
                     continue
-
-
+                key_number = int(input('Enter key number: '))
+                new_key = Key(number=key_number, hook=found_hook)
+                sess.add(new_key)
+                sess.commit()
+            elif choose == 'b':
+                employee_name = input('Enter employee name: ')
+                building_name, room_number = input('Enter building and room: ').split()
+                
 
 
     # metadata.drop_all(bind=engine)  # start with a clean slate while in development
