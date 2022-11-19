@@ -1,8 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from orm_base import Base
-from Request import Request
-from Door import Door
 from Building import Building
 
 
@@ -11,8 +9,8 @@ class Room(Base):
     building_name = Column("building_name", String(10), ForeignKey('buildings.name'), nullable=False, primary_key=True)
     number = Column("number", Integer, nullable=False, primary_key=True)
 
-    request_list: [Request] = relationship("Request", back_populates="room", viewonly=False)
-    door_list: [Door] = relationship("Door", back_populates="door", viewonly=False)
+    request_list = relationship("Request", back_populates="room", viewonly=False)
+    door_list = relationship("Door", back_populates="room", viewonly=False)
     building = relationship('Building', back_populates='room_list')
 
     def __int__(self, building: Building, number: Integer):

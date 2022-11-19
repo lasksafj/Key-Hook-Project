@@ -9,8 +9,8 @@ class Hook(Base):
     __tablename__ = "hooks"
     number = Column("number", Integer, nullable=False, primary_key=True)
 
-    key_list: [Key] = relationship("Key", back_populates="key", viewonly=False)
-    hook_door_list: [HookDoor] = relationship('HookDoor', back_populates='door', viewonly=False)
+    key_list: [Key] = relationship("Key", back_populates="hook", viewonly=False)
+    hook_door_list: [HookDoor] = relationship('HookDoor', back_populates='hook', viewonly=False)
 
     def __int__(self, number: Integer):
         self.number = number

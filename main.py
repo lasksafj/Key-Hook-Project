@@ -23,6 +23,37 @@ if __name__ == '__main__':
     # use the logging factory to create our second logger.
     logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
 
+    with Session() as sess:
+        while 1:
+            print('Menu: choose one')
+            print('a. Create a new Key.\n'
+                  'b. Request access to a given room by a given employee.\n'
+                  'c. Capture the issue of a key to an employee\n'
+                  'd. Capture losing a key\n'
+                  'e. Report out all the rooms that an employee can enter, given the keys that he/she already has.\n'
+                  'f. Delete a key.\n'
+                  'g. Delete an employee.\n'
+                  'h. Add a new door that can be opened by an existing hook.\n'
+                  'i. Update an access request to move it to a new employee.\n'
+                  'j. Report out all the employees who can get into a room.')
+
+            choose = input()
+            if choose == 'a':
+                hook_number = input('Which hook do you want to create key: ')
+                hooks = sess.query(Hook).all()
+                print(hooks)
+                found_hook = 0
+                for hook in hooks:
+                    if hook_number == hook.number:
+                        found_hook = 1
+                        break
+                if not found_hook:
+                    print('Cannot find hook')
+                    continue
+
+
+
+
     # metadata.drop_all(bind=engine)  # start with a clean slate while in development
     #
     # metadata.create_all(bind=engine)

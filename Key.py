@@ -10,7 +10,7 @@ class Key(Base):
     hook_number = Column('hook_number', Integer, ForeignKey('hooks.number'), nullable=False)
 
     hook = relationship("Hook", back_populates="key_list")
-    loan_list: [Loan] = relationship('Loan', back_populates='loan', viewonly=False)
+    loan_list: [Loan] = relationship('Loan', back_populates='key', viewonly=False)
 
     def __int__(self, number, hook):
         self.number = number
