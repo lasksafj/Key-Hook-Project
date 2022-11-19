@@ -41,6 +41,8 @@ if __name__ == '__main__':
 
         while 1:
             print('-----------------------------------------------------------------')
+            if input('Enter \'1\' to continue, else to exist ') != '1':
+                break
             print('Menu: choose one')
             print('a. Create a new Key.\n'
                   'b. Request access to a given room by a given employee.\n'
@@ -56,36 +58,35 @@ if __name__ == '__main__':
             choose = input()
             if choose == 'a':
                 hook_number = int(input('Which hook do you want to create key: '))
-                hooks = sess.query(Hook).all()
-                found_hook = {}
-                for hook in hooks:
-                    if hook_number == hook.number:
-                        found_hook = hook
-                        break
-                if not found_hook:
+                hook = sess.query(Hook).filter(Hook.number == hook_number).first()
+                if not hook:
                     print('Cannot find hook')
                     continue
                 key_number = int(input('Enter key number: '))
-                new_key = Key(number=key_number, hook=found_hook)
+                key = sess.query(Key).filter(Key.number == key_number).first()
+                if key:
+                    print('Key already exist')
+                    continue
+                new_key = Key(number=key_number, hook=hook)
                 sess.add(new_key)
                 sess.commit()
+
             elif choose == 'b':
                 employee_id = input('Enter employee id: ')
                 building_name, room_number = input('Enter building and room: ').split()
                 employee_id, room_number = int(employee_id), int(room_number)
-                req = room_employee_can_enter(employee_id)
-                if [building_name, room_number] in req:
+                rooms = room_employee_can_enter(employee_id)
+                if [building_name, room_number] in rooms:
                     print(employee_id, 'already has access to the room')
                     continue
 
                 all_key = sess.query(Key).join(HookDoor, Key.hook_number == HookDoor.hook_number) \
                     .filter(and_(HookDoor.door_room_building_name == building_name,
-                                 HookDoor.door_room_number == room_number))
+                                 HookDoor.door_room_number == room_number)).all()
 
                 key_not_return = sess.query(Key).join(Loan, Key.number == Loan.key_number) \
                     .outerjoin(ReturnKey, Loan.request_id == ReturnKey.loan_request_id) \
-                    .filter(ReturnKey.loan_request_id == None)
-
+                    .filter(or_(ReturnKey.loan_request_id == None, ReturnKey.loss)).all()
                 key = {}
                 for k in all_key:
                     if k not in key_not_return:
@@ -101,6 +102,93 @@ if __name__ == '__main__':
                 request = employee.request_room(room=room, request_time=date)
                 request.grant_key(key=key)
                 sess.commit()
+
+            elif choose == 'c':
+                employee_id = int(input('Enter employee id: '))
+                key_number = int(input('Enter key number: '))
+                keys = sess.query(Loan.key_number, Request.request_time).select_from(Employee) \
+                    .join(Request, Employee.employee_id == Request.employee_employee_id) \
+                    .filter(Employee.employee_id == employee_id) \
+                    .join(Loan, Request.id == Loan.request_id) \
+                    .outerjoin(ReturnKey, Loan.request_id == ReturnKey.loan_request_id) \
+                    .filter(ReturnKey.loan_request_id == None).all()
+                key = {}
+                for k in keys:
+                    if k[0] == key_number:
+                        key = k
+                        break
+                if not key:
+                    print('Employee', employee_id, 'does not have the key')
+                else:
+                    print('Employee', employee_id, 'have the key on', key[1])
+
+            elif choose == 'd':
+                key_number = int(input('Enter key number: '))
+                key = sess.query(Key).filter(Key.number == key_number).first()
+                if not key:
+                    print('Key does not exist')
+                    continue
+                q = sess.query(Loan.key_number).select_from(Loan) \
+                    .join(ReturnKey, Loan.request_id == ReturnKey.loan_request_id) \
+                    .filter(and_(Loan.key_number == key_number, ReturnKey.loss)).first()
+                if q:
+                    print('Key is lost')
+                else:
+                    print('Key is not lost')
+
+            elif choose == 'e':
+                keys = list(map(lambda x: int(x), input('Enter all the key numbers you have: ').split()))
+                q = sess.query(HookDoor.door_room_building_name, HookDoor.door_room_number).select_from(Key) \
+                    .join(Hook, Key.hook_number == Hook.number).filter(Key.number.in_(keys)) \
+                    .join(HookDoor, Hook.number == HookDoor.hook_number).all()
+                print('You can enter: ', end='')
+                res = ', '.join([' '.join([room[0], str(room[1])]) for room in q])
+                print(res)
+
+            elif choose == 'f':
+                key_number = int(input('Enter key number: '))
+                key = sess.query(Key).filter(Key.number == key_number).first()
+                if not key:
+                    print('Key does not exist')
+                    continue
+                sess.delete(key)
+                sess.commit()
+
+            elif choose == 'g':
+                employee_id = int(input('Enter employee id: '))
+                employee = sess.query(Employee).filter(Employee.employee_id == employee_id).first()
+                if not employee:
+                    print('Employee does not exist')
+                    continue
+                sess.delete(employee)
+                sess.commit()
+
+            elif choose == 'h':
+                hook_number = int(input('Enter hook number: '))
+
+            elif choose == 'i':
+                old_employee_id = int(input('Enter old employee id: '))
+                new_employee_id = int(input('Enter new employee id: '))
+
+
+            elif choose == 'j':
+                building_name, room_number = input('Enter building and room: ').split()
+                room_number = int(room_number)
+
+                q = sess.query(Employee.employee_id, Employee.name).select_from(Room) \
+                    .filter(and_(Room.building_name == building_name, Room.number == room_number)) \
+                    .join(Request, and_(Room.building_name == Request.room_building_name,
+                                        Room.number == Request.room_number)) \
+                    .outerjoin(ReturnKey, Request.id == ReturnKey.loan_request_id) \
+                    .filter(ReturnKey.loan_request_id == None) \
+                    .join(Employee, Request.employee_employee_id == Employee.employee_id).distinct().all()
+                if not q:
+                    print('No employee can enter the room')
+                    continue
+                print('Employees can enter the room: ', end='')
+                res = ', '.join([' - '.join([str(employee[0]), employee[1]]) for employee in q])
+                print(res)
+
 
     # metadata.drop_all(bind=engine)  # start with a clean slate while in development
     #

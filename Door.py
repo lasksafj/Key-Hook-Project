@@ -16,7 +16,8 @@ class Door(Base):
                       {})
 
     room = relationship("Room", back_populates="door_list")
-    hook_door_list = relationship('HookDoor', back_populates='door', viewonly=False)
+    hook_door_list = relationship('HookDoor', back_populates='door', viewonly=False,
+                                  cascade="all, delete, delete-orphan")
 
     def __int__(self, room, name: String):
         self.room_building_name = room.building_name

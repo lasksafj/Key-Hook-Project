@@ -9,8 +9,8 @@ class Room(Base):
     building_name = Column("building_name", String(10), ForeignKey('buildings.name'), nullable=False, primary_key=True)
     number = Column("number", Integer, nullable=False, primary_key=True)
 
-    request_list = relationship("Request", back_populates="room", viewonly=False)
-    door_list = relationship("Door", back_populates="room", viewonly=False)
+    request_list = relationship("Request", back_populates="room", viewonly=False, cascade="all, delete, delete-orphan")
+    door_list = relationship("Door", back_populates="room", viewonly=False, cascade="all, delete, delete-orphan")
     building = relationship('Building', back_populates='room_list')
 
     def __int__(self, building: Building, number: Integer):

@@ -9,8 +9,9 @@ class Loan(Base):
     request_id = Column('request_id', Integer, ForeignKey('requests.id'), nullable=False, primary_key=True)
 
     key = relationship("Key", back_populates="loan_list")
-    request = relationship('Request', back_populates='loan')
-    return_key = relationship('ReturnKey', back_populates='loan')
+    request = relationship('Request', back_populates='loan', cascade="all, delete, delete-orphan", single_parent=True)
+    return_key = relationship('ReturnKey', back_populates='loan', cascade="all, delete, delete-orphan",
+                              single_parent=True)
 
     def __int__(self, key, request):
         self.key_number = key.number

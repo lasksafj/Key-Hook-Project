@@ -21,7 +21,7 @@ class Request(Base):
 
     employee = relationship("Employee", back_populates='request_list')
     room = relationship("Room", back_populates='request_list')
-    loan = relationship('Loan', back_populates='request')
+    loan = relationship('Loan', back_populates='request', cascade="all, delete, delete-orphan", single_parent=True)
 
     def __init__(self, employee, room, request_time: DateTime):
         self.employee_employee_id = employee.employee_id

@@ -9,7 +9,8 @@ class Employee(Base):
     name = Column("name", String(60), nullable=False)
     employee_id = Column("employee_id", Integer, nullable=False, primary_key=True)
 
-    request_list: [Request] = relationship("Request", back_populates="employee", viewonly=False)
+    request_list: [Request] = relationship("Request", back_populates="employee", viewonly=False,
+                                           cascade="all, delete, delete-orphan")
 
     def __int__(self, name: String, employee_id: Integer):
         self.employee_id = employee_id
