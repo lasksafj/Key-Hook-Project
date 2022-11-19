@@ -27,38 +27,38 @@ if __name__ == '__main__':
     #
     # metadata.create_all(bind=engine)
 
-    sec1: Section = Section(section_id="123", department_name="CECS", course_name="323", section_number=1,
-                            semester="Fall", year=2022)
-
-    student1: Student = Student(student_id="1111", last_name="Nguyen", first_name="Nhat")
-    student2: Student = Student(student_id="2222", last_name="Tran", first_name="Quy")
-    student3: Student = Student(student_id="3333", last_name="Truong", first_name="Toan")
-
-    with Session() as sess:
-        sess.begin()
-        print("Inside the session, woo hoo.")
-        sess.add(sec1)
-        sess.add(student1)
-        sess.add(student2)
-        sess.add(student3)
-        sess.commit()
-
-        sec1.add_student(student1, '3.5')
-        sec1.add_student(student2, '3.5')
-        sec1.add_student(student3, '3.5')
-        sess.commit()
-
-        students = sess.query(Student).all()
-        print("Student: ")
-        for student in students:
-            pprint(student.__dict__)
-        enrollments = sess.query(Enrollment).all()
-        print("Enrollment: ")
-        for e in enrollments:
-            pprint(e.__dict__)
-        sections = sess.query(Section).all()
-        print("Section: ")
-        for e in sections:
-            pprint(e.__dict__)
-
-    print("Exiting normally.")
+    # sec1: Section = Section(section_id="123", department_name="CECS", course_name="323", section_number=1,
+    #                         semester="Fall", year=2022)
+    #
+    # student1: Student = Student(student_id="1111", last_name="Nguyen", first_name="Nhat")
+    # student2: Student = Student(student_id="2222", last_name="Tran", first_name="Quy")
+    # student3: Student = Student(student_id="3333", last_name="Truong", first_name="Toan")
+    #
+    # with Session() as sess:
+    #     sess.begin()
+    #     print("Inside the session, woo hoo.")
+    #     sess.add(sec1)
+    #     sess.add(student1)
+    #     sess.add(student2)
+    #     sess.add(student3)
+    #     sess.commit()
+    #
+    #     sec1.add_student(student1, '3.5')
+    #     sec1.add_student(student2, '3.5')
+    #     sec1.add_student(student3, '3.5')
+    #     sess.commit()
+    #
+    #     students = sess.query(Student).all()
+    #     print("Student: ")
+    #     for student in students:
+    #         pprint(student.__dict__)
+    #     enrollments = sess.query(Enrollment).all()
+    #     print("Enrollment: ")
+    #     for e in enrollments:
+    #         pprint(e.__dict__)
+    #     sections = sess.query(Section).all()
+    #     print("Section: ")
+    #     for e in sections:
+    #         pprint(e.__dict__)
+    #
+    # print("Exiting normally.")
