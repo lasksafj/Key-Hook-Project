@@ -196,11 +196,13 @@ if __name__ == '__main__':
                     .first()
                 if not room:
                     print('Room does not exist')
+                    continue
                 door_name = input('Enter new door name you want to add: ')
                 hook_number = int(input('Enter hook number you want to open the door: '))
                 hook = sess.query(Hook).filter(Hook.number == hook_number).first()
                 if not hook:
                     print('Hook does not exist')
+                    continue
                 door = Door(room=room, name=door_name)
                 sess.add(door)
                 door.add_hook(hook)
