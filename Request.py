@@ -36,6 +36,6 @@ class Request(Base):
             return
         loan = Loan(key=key, request=self)
         key.loan_list.append(loan)
-        self.loan.append(loan)
+        self.loan = [loan]
 
 
