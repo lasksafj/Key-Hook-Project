@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="40036dc6-bcba-4370-80ca-87f5bea809ab" name="Changes" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Building.py" beforeDir="false" afterPath="$PROJECT_DIR$/Building.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Door.py" beforeDir="false" afterPath="$PROJECT_DIR$/Door.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Employee.py" beforeDir="false" afterPath="$PROJECT_DIR$/Employee.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hook.py" beforeDir="false" afterPath="$PROJECT_DIR$/Hook.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Key.py" beforeDir="false" afterPath="$PROJECT_DIR$/Key.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Loan.py" beforeDir="false" afterPath="$PROJECT_DIR$/Loan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Request.py" beforeDir="false" afterPath="$PROJECT_DIR$/Request.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Room.py" beforeDir="false" afterPath="$PROJECT_DIR$/Room.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

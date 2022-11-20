@@ -1,5 +1,7 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
+
+
 from orm_base import Base
 from Room import Room
 
@@ -31,6 +33,7 @@ class Door(Base):
             if hook_door.hook == hook:
                 print('Error add_hook')
                 return
+        from HookDoor import HookDoor
         hook_door = HookDoor(hook=hook, door=self)
         self.hook_door_list.append(hook_door)
         hook.hook_door_list.append(hook_door)

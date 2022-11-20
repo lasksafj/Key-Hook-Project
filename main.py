@@ -164,12 +164,36 @@ if __name__ == '__main__':
                 sess.commit()
 
             elif choose == 'h':
-                hook_number = int(input('Enter hook number: '))
+                building_name, room_number = input('Enter building and room you want to add new door: ').split()
+                room_number = int(room_number)
+                room = sess.query(Room) \
+                    .filter(and_(Room.building_name == building_name, Room.number == room_number)) \
+                    .first()
+                if not room:
+                    print('Room does not exist')
+                door_name = input('Enter new door name you want to add: ')
+                hook_number = int(input('Enter hook number you want to open the door: '))
+                hook = sess.query(Hook).filter(Hook.number == hook_number).first()
+                if not hook:
+                    print('Hook does not exist')
+                door = Door(room=room, name=door_name)
+                sess.add(door)
+                door.add_hook(hook)
+                sess.commit()
 
             elif choose == 'i':
                 old_employee_id = int(input('Enter old employee id: '))
                 new_employee_id = int(input('Enter new employee id: '))
-
+                key_number = int(input('Enter key number to move to new employee: '))
+                requests = sess.query(Request).select_from(Request)\
+                    .filter(Request.employee_employee_id == old_employee_id)\
+                    .join(Loan, Request.id == Loan.request_id)\
+                    .filter(Loan.key_number == key_number)\
+                    .outerjoin(ReturnKey, Request.id == ReturnKey.loan_request_id)\
+                    .filter(ReturnKey.loan_request_id == None).all()
+                for request in requests:
+                    request.employee_employee_id = new_employee_id
+                sess.commit()
 
             elif choose == 'j':
                 building_name, room_number = input('Enter building and room: ').split()
@@ -189,43 +213,3 @@ if __name__ == '__main__':
                 res = ', '.join([' - '.join([str(employee[0]), employee[1]]) for employee in q])
                 print(res)
 
-
-    # metadata.drop_all(bind=engine)  # start with a clean slate while in development
-    #
-    # metadata.create_all(bind=engine)
-
-    # sec1: Section = Section(section_id="123", department_name="CECS", course_name="323", section_number=1,
-    #                         semester="Fall", year=2022)
-    #
-    # student1: Student = Student(student_id="1111", last_name="Nguyen", first_name="Nhat")
-    # student2: Student = Student(student_id="2222", last_name="Tran", first_name="Quy")
-    # student3: Student = Student(student_id="3333", last_name="Truong", first_name="Toan")
-    #
-    # with Session() as sess:
-    #     sess.begin()
-    #     print("Inside the session, woo hoo.")
-    #     sess.add(sec1)
-    #     sess.add(student1)
-    #     sess.add(student2)
-    #     sess.add(student3)
-    #     sess.commit()
-    #
-    #     sec1.add_student(student1, '3.5')
-    #     sec1.add_student(student2, '3.5')
-    #     sec1.add_student(student3, '3.5')
-    #     sess.commit()
-    #
-    #     students = sess.query(Student).all()
-    #     print("Student: ")
-    #     for student in students:
-    #         pprint(student.__dict__)
-    #     enrollments = sess.query(Enrollment).all()
-    #     print("Enrollment: ")
-    #     for e in enrollments:
-    #         pprint(e.__dict__)
-    #     sections = sess.query(Section).all()
-    #     print("Section: ")
-    #     for e in sections:
-    #         pprint(e.__dict__)
-    #
-    # print("Exiting normally.")
