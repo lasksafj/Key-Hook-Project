@@ -198,6 +198,12 @@ if __name__ == '__main__':
                     print('Room does not exist')
                     continue
                 door_name = input('Enter new door name you want to add: ')
+                door = sess.query(Door).filter(and_(Door.room_building_name == building_name,
+                                                    Door.room_number == room_number, Door.name == door_name)).first()
+                if door:
+                    print('Door already exist')
+                    continue
+
                 hook_number = int(input('Enter hook number you want to open the door: '))
                 hook = sess.query(Hook).filter(Hook.number == hook_number).first()
                 if not hook:
@@ -211,7 +217,16 @@ if __name__ == '__main__':
             # Update an access request to move it to a new employee.
             elif choose == 'i':
                 old_employee_id = int(input('Enter old employee id: '))
+                emp = sess.query(Employee).filter(Employee.employee_id == old_employee_id).first()
+                if not emp:
+                    print('Not found')
+                    continue
                 new_employee_id = int(input('Enter new employee id: '))
+                emp = sess.query(Employee).filter(Employee.employee_id == new_employee_id).first()
+                if not emp:
+                    print('Not found')
+                    continue
+
                 key_number = int(input('Enter key number to move to new employee: '))
                 # find all requests that the old employee make with the given key
                 requests = sess.query(Request).select_from(Request)\
